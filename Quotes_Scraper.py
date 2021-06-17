@@ -5,9 +5,10 @@ url = "http://quotes.toscrape.com/"
 
 def get_soup(url):
 
-	page = request.get(url)
-	page_soup= soup(page, "html.parser")
-	return(page_soup)
+	page = requests.get(url)
+
+	page_soup= soup(page.text, "html.parser")
+	print(page_soup)
 
 get_soup(url)
 
