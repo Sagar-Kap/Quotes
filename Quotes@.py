@@ -9,10 +9,11 @@ def get_soup(url):
 	page_soup= soup(page.text, "html.parser")
 	return(page_soup)
 
+a= get_soup(url)
+
 def get_text(url):
 
-	get_soup(url)
-	text_array= page_soup.findAll("div", {"class":"quote"})
+	text_array= a.findAll("div", {"class":"quote"})
 	for container in text_array:
 		text_container = container.find("span", {"class":"text"})
 		text = text_container.get_text()
