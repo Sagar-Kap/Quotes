@@ -7,7 +7,11 @@ def get_soup(url):
 
 	page = requests.get(url)
 	page_soup= soup(page.text, "html.parser")
+	return(page_soup)
 
+def get_text(url):
+
+	get_soup(url)
 	text_array= page_soup.findAll("div", {"class":"quote"})
 	for container in text_array:
 		text_container = container.find("span", {"class":"text"})
@@ -15,4 +19,4 @@ def get_soup(url):
 		print(text+"\n")
 
 
-get_soup(url)
+get_text(url)
