@@ -11,7 +11,7 @@ def get_soup(url):
 
 a= get_soup(url)
 
-def get_text(url):
+def get_text():
 
 	text_array= a.findAll("div", {"class":"quote"})
 	for container in text_array:
@@ -20,4 +20,4 @@ def get_text(url):
 		print(text+"\n")
 
 
-get_text(url)
+get_text()
