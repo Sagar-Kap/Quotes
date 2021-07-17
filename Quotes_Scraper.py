@@ -2,36 +2,47 @@ import requests
 from bs4 import BeautifulSoup as soup
 import csv
 
-URL = "http://quotes.toscrape.com/"
+URL = "http://quotes.toscrape.com/"             
 
-def connection(): #form a connection
+def get_url():
+	"""This function performs a GET request to URL
+	passed as a parameter within its execution"""                   			 
 	with requests.Session() as session:
 		return session.get(URL)
 
-def soupa():  #form a soup of the page
-	return soup(connection().text, "html.parser")
+def make_soup():
+	"""Function returns a soup object stored in the variable""" 
+	return soup(get_url().text, "html.parser")
 	
 
-def text_boxes(): #find out the text boxes in the page
-	text_boxes= soupa().findAll("div", {"class": "quote"})
-	return text_boxes
+def get_container_array():
+	"""Function finds out all HTML containers with the quotes 
+	and authors' names and returns an array""" 
+	text_boxes_array= make_soup().findAll("div", {"class" : "quote"})
+	return text_boxes_array
 
-def quotes(a): #return quotes from the selected div
-	quotes= a.find("span", {"class" : "text"})
-	return quotes.get_text()
+def get_quote(a):
+	"""Function finds the quote from the 
+	selected HTML container passed to it as an argument""" 
+	quote= a.find("span", {"class" : "text"})
+	return quote.get_text()
 
-def author(b): #return the author from the selected div
+def get_author_name(b): 
+	"""Function returns the author's name from the HTML container passed to it
+	as an argument"""
 	author = b.find("small", {"class" : "author"})
 	return author.get_text()
 
-def text():
-	with open("quotes.csv", "w", newline="") as f:
-		thewriter = csv.writer(f)
+def fill_csv():
+	"""Function compiles the quotes and 
+	author's name into a csv file, quotes.csv"""
+	with open("quotes.csv", "w", newline="") as file:
+		thewriter = csv.writer(file)
 		thewriter.writerow(["Quote", "Author"])
-		q=1
-		for i in text_boxes():
-			print(str(q)+". " + quotes(i) + author(i))
-			thewriter.writerow([quotes(i), author(i)])
-			q+=1
+		serial_num=1
+		for i in get_container_array():
+			print(str(serial_num)+". " + get_quote(i) + get_author_name(i))
+			thewriter.writerow([get_quote(i), get_author_name(i)])
+			serial_num+=1
 
-text()
+fill_csv()
