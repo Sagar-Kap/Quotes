@@ -1,10 +1,6 @@
 import requests 
 from bs4 import BeautifulSoup as soup
-
-filename= "quotes.csv"
-f= open(filename, "w")
-headers = "Quotes,Author\n"
-f.write(headers)
+import csv
 
 URL = "http://quotes.toscrape.com/"
 
@@ -29,11 +25,13 @@ def author(b): #return the author from the selected div
 	return author.get_text()
 
 def text():
-	q=1
-	for i in text_boxes():
-		print(str(q)+". " + quotes(i) + author(i))
-		f.write(quotes(i)+","+author(i)+"\n")
-		q+=1
+	with open("quotes.csv", "w", newline="") as f:
+		thewriter = csv.writer(f)
+		thewriter.writerow(["Quote", "Author"])
+		q=1
+		for i in text_boxes():
+			print(str(q)+". " + quotes(i) + author(i))
+			thewriter.writerow([quotes(i), author(i)])
+			q+=1
 
 text()
-f.close()	
