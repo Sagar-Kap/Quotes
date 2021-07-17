@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup as soup
 import csv
 
-URL = "http://quotes.toscrape.com/"             
+page_num=1
+URL = "https://quotes.toscrape.com/page/"+str(page_num)+"/"             
 
 def get_url():
 	"""This function performs a GET request to URL
@@ -35,14 +36,19 @@ def get_author_name(b):
 
 def fill_csv():
 	"""Function compiles the quotes and 
-	author's name into a csv file, quotes.csv"""
+	author's name into a csv file for all web pages, quotes.csv"""
 	with open("quotes.csv", "w", newline="") as file:
 		thewriter = csv.writer(file)
 		thewriter.writerow(["Quote", "Author"])
 		serial_num=1
-		for i in get_container_array():
-			print(str(serial_num)+". " + get_quote(i) + get_author_name(i))
-			thewriter.writerow([get_quote(i), get_author_name(i)])
-			serial_num+=1
+		global page_num
+
+		while page_num<=10:
+			for i in get_container_array():
+				print(str(serial_num)+". " + get_quote(i) + get_author_name(i))
+				thewriter.writerow([get_quote(i), get_author_name(i)])
+				serial_num+=1
+			page_num+=1
+		
 
 fill_csv()
