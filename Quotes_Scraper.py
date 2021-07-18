@@ -5,21 +5,21 @@ import csv
 page_num=1
 URL = "https://quotes.toscrape.com/page/"+str(page_num)+"/"             
 
-def get_url():
+def get_url(url):
 	"""This function performs a GET request to URL
 	passed as a parameter within its execution"""                   			 
 	with requests.Session() as session:
-		return session.get(URL)
+		return session.get(url)
 
-def make_soup():
+def make_soup(url):
 	"""Function returns a soup object stored in the variable""" 
-	return soup(get_url().text, "html.parser")
+	return soup(get_url(url).text, "html.parser")
 	
 
-def get_container_array():
+def get_container_array(url):
 	"""Function finds out all HTML containers with the quotes 
 	and authors' names and returns an array""" 
-	text_boxes_array= make_soup().findAll("div", {"class" : "quote"})
+	text_boxes_array= make_soup(url).findAll("div", {"class" : "quote"})
 	return text_boxes_array
 
 def get_quote(a):
@@ -34,21 +34,26 @@ def get_author_name(b):
 	author = b.find("small", {"class" : "author"})
 	return author.get_text()
 
-def fill_csv():
+def fill_csv(url):
 	"""Function compiles the quotes and 
 	author's name into a csv file for all web pages, quotes.csv"""
 	with open("quotes.csv", "w", newline="") as file:
 		thewriter = csv.writer(file)
 		thewriter.writerow(["Quote", "Author"])
 		serial_num=1
-		global page_num
 
-		while page_num<=10:
-			for i in get_container_array():
-				print(str(serial_num)+". " + get_quote(i) + get_author_name(i))
-				thewriter.writerow([get_quote(i), get_author_name(i)])
-				serial_num+=1
-			page_num+=1
-		
+		for container in get_container_array(url):
+			print(str(serial_num)+". " + get_quote(container) + get_author_name(container))
+			thewriter.writerow([get_quote(container), get_author_name(container)])
+			serial_num+=1
 
-fill_csv()
+def multi_page():
+	Page_Num= 1
+	page_url= "https://quotes.toscrape.com/page/"+str(Page_Num)+"/" 
+
+	while Page_Num <= 10:
+		fill_csv(page_url)
+		Page_Num+=1
+
+multi_page()
+
