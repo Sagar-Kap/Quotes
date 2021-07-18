@@ -48,6 +48,8 @@ def fill_csv(url):
 			serial_num+=1
 
 def multi_page():
+	"""Function will loop through each page
+	of site and invoke scraping func fill_csv() on each"""
 	Page_Num= 1
 	page_url= "https://quotes.toscrape.com/page/"+str(Page_Num)+"/" 
 
